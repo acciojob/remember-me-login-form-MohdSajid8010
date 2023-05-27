@@ -1,37 +1,51 @@
-//your JS code here. If required.
-let submitBtn=document.getElementById("submit");
-let usernameEl=document.getElementById("username");
-let passwordEl=document.getElementById("password");
-let checkboxEl=document.getElementById("checkbox");
+//your code here
+const form = document.querySelector("form");
+const usernameInput = document.querySelector("#username");
+const passwordInput = document.querySelector("#password");
+const rememberMeCheckbox = document.querySelector("#checkbox");
+const exisitingButton = document.querySelector("#existing");
 
-let existingBtn=document.getElementById("existing");
-let form=document.getElementsByTagName("form")[0];
+form.addEventListener("submit", (event) => {
+  event.preventDefault();
+  const username = usernameInput.value;
+  const password = passwordInput.value;
+  const rememberMe = rememberMeCheckbox.checked;
 
-form.addEventListener("submit",(e)=>{
-    e.preventDefault();
-    if(checkboxEl.checked)
-    {
-        let username=usernameEl.value;
-        localStorage.setItem("username",JSON.stringify(username))
+  if (rememberMe) {
+    localStorage.setItem("username", username);
+    localStorage.setItem("password", password);
+  } else {
+    localStorage.removeItem("username");
+    localStorage.removeItem("password");
+  }
 
-        let password=passwordEl.value;
-        localStorage.setItem("password",JSON.stringify(password))
-    }
-    else{
-        alert(`Logged in as ${usernameEl.value}`)
-    }
+  alert(`Logged in as ${username}`);
+  showButton();
+
+  form.reset(); // Clear the form fields
+});
+
+function loginAsSaved() {
+  const username = localStorage.getItem("username");
+  const password = localStorage.getItem("password");
+
+  if (username && password) {
+    alert(`Logged in as ${username}`);
     form.reset();
-})
-
-function loginAsSaved()
-{
-    let username=JSON.parse(localStorage.getItem("username"));
-    let password=JSON.parse(localStorage.getItem("password"));
-    if(username && password)
-    {
-        alert(`Logged in as ${username}`);
-    }
+  }
 }
-existingBtn.addEventListener("click",loginAsSaved)
 
+function showButton() {
+  const username = localStorage.getItem("username");
+  const password = localStorage.getItem("password");
 
+  if (username && password) {
+    exisitingButton.style.display = "block";
+  } else {
+    exisitingButton.style.display = "none";
+  }
+}
+
+exisitingButton.style.display = "none";
+exisitingButton.addEventListener("click", loginAsSaved);
+showButton();
